@@ -54,17 +54,25 @@ window.ES_DADOS = {
             "unidade": "km",
             "valor": 45
           },
+          "bateria": {
+            "unidade": "Ah",
+            "valor": 24
+          },
           "carga_maxima": {
             "unidade": "kg",
             "valor": 180
           },
           "peso": {
             "unidade": "kg",
-            "valor": 73
+            "valor": 66.8
           },
           "potencia": {
             "unidade": "W",
             "valor": 1000
+          },
+          "recarga": {
+            "unidade": "h",
+            "valor": 8
           },
           "velocidade": {
             "unidade": "km/h",
@@ -100,12 +108,14 @@ window.ES_DADOS = {
           "Chave reserva",
           "Farol em LED",
           "Alarme",
-          "Bateria removível",
+          "Bateria de lítio removível",
           "Carregador bivolt",
           "NFC",
           "Ré",
           "Setas",
-          "Freio a disco"
+          "Freio hidráulico a disco",
+          "Suspensão hidráulica dianteira",
+          "Suspensão traseira com molas"
         ],
         "nome": "A4"
       },
@@ -1527,8 +1537,8 @@ window.ES_DADOS = {
         "testride": "Olá! Vi o site[ da {loja}] e quero visitar a loja[ para ver o {modelo}]."
       },
       "numeros": {
-        "assistencia": "5551996183222",
-        "vendas": "5551997532998"
+        "assistencia": "5551995929848",
+        "vendas": "5551995929848"
       }
     }
   }

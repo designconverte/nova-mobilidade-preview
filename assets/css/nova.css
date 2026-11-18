@@ -836,56 +836,6 @@ h3 {
   border-right-width: 0;
 }
 
-.hero__prova {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  margin-block: var(--es-espaco-4) 0;
-  padding: 0;
-  list-style: none;
-  border: var(--es-borda-largura) solid var(--nv-linha-vidro);
-  border-radius: 1.25rem;
-  background: var(--nv-branco-06);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  backdrop-filter: blur(14px) saturate(140%);
-}
-
-.hero__prova li {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--es-espaco-4);
-  padding: var(--es-espaco-4) var(--es-espaco-5);
-}
-
-.hero__prova li + li {
-  border-top: var(--es-borda-largura) solid var(--nv-linha-vidro);
-}
-
-.hero__prova strong {
-  color: var(--nv-verde);
-  font-family: var(--es-fonte-titulo);
-  font-size: clamp(1.625rem, 1.2rem + 1.4vw, 2.375rem);
-  font-weight: 800;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.hero__prova strong span {
-  color: var(--es-cor-texto);
-  font-size: 0.875rem;
-  font-weight: 700;
-}
-
-.hero__prova li > span {
-  color: var(--es-cor-texto-suave);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-align: right;
-  text-transform: uppercase;
-}
-
 .vitrine-secao .secao__cabeca {
   margin-bottom: var(--es-espaco-6);
 }
@@ -2133,26 +2083,6 @@ h3 {
 }
 
 @media (min-width: 40em) {
-  .hero__prova {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .hero__prova li {
-    display: grid;
-    align-content: start;
-    justify-content: start;
-    gap: var(--es-espaco-2);
-    padding: var(--es-espaco-5) var(--es-espaco-6);
-  }
-
-  .hero__prova li + li {
-    border-top: 0;
-    border-left: var(--es-borda-largura) solid var(--nv-linha-vidro);
-  }
-
-  .hero__prova li > span {
-    text-align: left;
-  }
 
   .passos {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2160,10 +2090,6 @@ h3 {
 
   .motivos {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .rodape__grade {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .hero__acoes .botao {
@@ -2443,10 +2369,6 @@ h3 {
   max-height: 100%;
 }
 
-.rodape__bloco:nth-child(3) {
-  grid-column: 1 / -1;
-}
-
 .rodape__fone {
   white-space: nowrap;
   overflow-wrap: anywhere;
@@ -2499,12 +2421,6 @@ h3 {
   .rodape__fone {
     font-size: 1.0625rem;
   }
-}
-
-.hero__prova strong .nv-conta {
-  color: inherit;
-  font-size: inherit;
-  font-weight: inherit;
 }
 
 .cta-final {

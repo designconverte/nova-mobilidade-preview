@@ -858,7 +858,6 @@
     const moldura = doc.querySelector('[data-nv-moldura]');
     const camada = doc.querySelector('[data-nv-camada]');
     const conteudo = doc.querySelector('.hero__conteudo');
-    const prova = doc.querySelector('.hero__prova');
     const chevron = doc.querySelector('.hero__chevron');
     const linha = gsap.timeline({ defaults: { ease: 'expo.out' } });
     // Abertura: a loja aparece dentro do chevron da marca, que se abre até a tela inteira.
@@ -880,7 +879,6 @@
     if (moldura) gsap.fromTo(moldura, { clipPath: 'inset(0% 0% 0% 0% round 0rem)' }, { clipPath: grande ? 'inset(0% 4% 14% 4% round 2.5rem)' : 'inset(0% 3% 10% 3% round 1.5rem)', ease: 'none', scrollTrigger: rolar });
     if (camada) gsap.to(camada, { yPercent: 10, ease: 'none', scrollTrigger: rolar });
     if (conteudo) gsap.to(conteudo, { yPercent: grande ? -18 : -8, opacity: 0, ease: 'power1.in', scrollTrigger: rolar });
-    if (prova && grande) gsap.to(prova, { yPercent: -30, ease: 'none', scrollTrigger: rolar });
     if (chevron && grande) gsap.to(chevron, { xPercent: -8, ease: 'none', scrollTrigger: rolar });
   }
 
@@ -923,7 +921,7 @@
       ligarHero(gsap);
       ligarFaixa(gsap);
     } catch (_erro) {
-      gsap.set('[data-nv-hero], [data-nv-passos] > li, .hero__linha > span, .hero__neon, [data-nv-carga], [data-nv-midia], [data-nv-moldura], [data-nv-camada], .hero__conteudo, .hero__prova, .hero__chevron', { clearProps: 'all' });
+      gsap.set('[data-nv-hero], [data-nv-passos] > li, .hero__linha > span, .hero__neon, [data-nv-carga], [data-nv-midia], [data-nv-moldura], [data-nv-camada], .hero__conteudo, .hero__chevron', { clearProps: 'all' });
     }
   }
 
