@@ -52,7 +52,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 45
+            "valor": 55
           },
           "bateria": {
             "unidade": "Ah",
@@ -170,7 +170,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 45
+            "valor": 55
           },
           "carga_maxima": {
             "unidade": "kg",
@@ -283,7 +283,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 45
+            "valor": 55
           },
           "carga_maxima": {
             "unidade": "kg",
@@ -402,7 +402,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 45
+            "valor": 55
           },
           "carga_maxima": {
             "unidade": "kg",
@@ -504,7 +504,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 40
+            "valor": 50
           },
           "carga_maxima": {
             "unidade": "kg",
@@ -607,7 +607,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 40
+            "valor": 50
           },
           "carga_maxima": {
             "unidade": "kg",
@@ -704,7 +704,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 40
+            "valor": 50
           },
           "carga_maxima": {
             "unidade": "kg",
@@ -818,7 +818,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 25
+            "valor": 30
           },
           "carga_maxima": {
             "unidade": "kg",
@@ -909,7 +909,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 45
+            "valor": 55
           },
           "peso": {
             "unidade": "kg",
@@ -1024,7 +1024,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 20
+            "valor": 25
           },
           "carga_maxima": {
             "unidade": "kg",
@@ -1140,7 +1140,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 60
+            "valor": 70
           },
           "carga_maxima": {
             "unidade": "kg",
@@ -1265,7 +1265,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 20
+            "valor": 25
           },
           "carga_maxima": {
             "unidade": "kg",
@@ -1366,7 +1366,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 18
+            "valor": 25
           },
           "carga_maxima": {
             "unidade": "kg",
@@ -1429,7 +1429,7 @@ window.ES_DADOS = {
         "especificacoes": {
           "autonomia": {
             "unidade": "km",
-            "valor": 25
+            "valor": 30
           },
           "carga_maxima": {
             "unidade": "kg",

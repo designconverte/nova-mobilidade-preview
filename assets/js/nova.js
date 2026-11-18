@@ -441,7 +441,7 @@
   const DESTAQUES = [
     { rotulo: 'Velocidade', teste: /^velocidade/i },
     { rotulo: 'Potência', teste: /^pot[êe]ncia/i },
-    { rotulo: 'Autonomia', teste: /^autonomia/i },
+    { rotulo: 'Autonomia', teste: /^autonomia/i, antes: 'até' },
   ];
 
   function itensDaFicha(dl) {
@@ -455,7 +455,7 @@
   function numerosEmDestaque(itens, classe) {
     const escolhidos = DESTAQUES.map((d) => {
       const achado = itens.find((i) => d.teste.test(i.rotulo));
-      return achado ? { rotulo: d.rotulo, valor: achado.valor, item: achado.item } : null;
+      return achado ? { rotulo: d.rotulo, antes: d.antes, valor: achado.valor, item: achado.item } : null;
     }).filter(Boolean);
     if (!escolhidos.length) return null;
     const dl = elemento('dl', `es-catalogo-especificacoes nv-numeros ${classe}`);
@@ -464,6 +464,7 @@
       const dd = elemento('dd');
       const partes = e.valor.match(/^([\d.,]+)\s*(.*)$/);
       if (partes) {
+        if (e.antes) dd.appendChild(elemento('span', 'nv-numeros__antes', e.antes));
         dd.appendChild(elemento('b', '', partes[1].replace(/^(\d{1,2})\.(\d{3})$/, '$1$2')));
         if (partes[2]) dd.appendChild(elemento('span', '', partes[2]));
       } else {

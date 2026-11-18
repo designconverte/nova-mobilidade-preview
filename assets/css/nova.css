@@ -2391,6 +2391,39 @@ h3 {
   font-size: 0.6875rem;
 }
 
+.nv-numeros .es-catalogo-especificacoes__item {
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.nv-numeros dt {
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 22.49em) {
+  .es-catalogo-card .nv-numeros dt,
+  .nv-modal .nv-numeros--modal dt {
+    font-size: 0.5625rem;
+  }
+
+  .es-catalogo-card .nv-numeros dd,
+  .nv-modal .nv-numeros--modal dd {
+    flex-wrap: wrap;
+  }
+
+  .es-catalogo-card .nv-numeros dd b,
+  .nv-modal .nv-numeros--modal dd b {
+    font-size: 1.0625rem;
+  }
+}
+
+@media (max-width: 29.99em) {
+  .nv-modal .nv-numeros--modal .es-catalogo-especificacoes__item {
+    padding-right: 0.5rem;
+    padding-left: 0.625rem;
+  }
+}
+
 .tag,
 .nv-modal__eyebrow,
 .nv-modal__cor,
