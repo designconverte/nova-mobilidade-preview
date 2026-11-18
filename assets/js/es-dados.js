@@ -1524,7 +1524,7 @@ window.ES_DADOS = {
         "geral": "Olá! Vim pelo site[ da {loja}] e quero mais informações.",
         "modelo": "Olá! Tenho interesse no {modelo}[ na cor {cor}]. Pode me passar mais informações?",
         "preco": "Olá! Quero comprar o {modelo}[ na cor {cor}]. Pode me passar o preço e as condições de pagamento?",
-        "testride": "Olá! Quero agendar um test ride[ do {modelo}]."
+        "testride": "Olá! Vi o site[ da {loja}] e quero visitar a loja[ para ver o {modelo}]."
       },
       "numeros": {
         "assistencia": "5551996183222",

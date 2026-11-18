@@ -733,14 +733,14 @@
         base.appendChild(barra);
         const whatsapp = janela.ES_LEAD_WHATSAPP;
         const href = id && whatsapp && typeof whatsapp.linkDoPedido === 'function'
-          ? whatsapp.linkDoPedido({ atributos: { 'data-wa-contexto': 'testride', 'data-origem': 'modal_testride', 'data-modelo': id, 'data-cor': '' } })
+          ? whatsapp.linkDoPedido({ atributos: { 'data-wa-contexto': 'testride', 'data-origem': 'modal_visita', 'data-modelo': id, 'data-cor': '' } })
           : null;
         if (href) {
-          const testride = elemento('a', 'nv-modal__testride', 'Test ride');
+          const testride = elemento('a', 'nv-modal__testride', 'Ver na loja');
           testride.href = href;
           testride.setAttribute('data-es-link', 'lead-whatsapp');
           testride.setAttribute('data-wa-contexto', 'testride');
-          testride.setAttribute('data-origem', 'modal_testride');
+          testride.setAttribute('data-origem', 'modal_visita');
           testride.setAttribute('data-modelo', id);
           barra.appendChild(testride);
         }
