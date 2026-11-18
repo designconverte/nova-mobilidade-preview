@@ -290,70 +290,95 @@
     });
   }
 
-  function ligarVitrineDoHero() {
-    const vitrine = doc.querySelector('[data-nv-vitrine]');
-    if (!vitrine) return;
-    const produtos = todos(vitrine, '[data-nv-produto]');
-    const etiqueta = vitrine.querySelector('[data-nv-etiqueta]');
-    const pausa = vitrine.querySelector('[data-nv-pausa]');
-    const rotuloPausa = vitrine.querySelector('[data-nv-pausa-rotulo]');
-    if (produtos.length < 2 || movimentoReduzido()) return;
-    const INTERVALO = 4800;
-    let atual = 0;
-    let relogio = 0;
-    let pausado = false;
-    let visivel = true;
-
-    const mostrar = (i) => {
-      const saindo = produtos[atual];
-      const entrando = produtos[i];
-      saindo.classList.remove('is-ativo');
-      saindo.classList.add('is-saindo');
-      janela.setTimeout(() => saindo.classList.remove('is-saindo'), 1100);
-      entrando.classList.remove('is-saindo');
-      entrando.classList.add('is-ativo');
-      atual = i;
-      if (etiqueta) etiqueta.textContent = entrando.getAttribute('data-nv-produto');
-    };
-    const proximo = () => {
-      relogio = 0;
-      if (pausado || !visivel || doc.hidden) return;
-      let i = (atual + 1) % produtos.length;
-      while (i !== atual && !(produtos[i].complete && produtos[i].naturalWidth)) i = (i + 1) % produtos.length;
-      if (i !== atual) mostrar(i);
-      agendar();
-    };
-    function agendar() {
-      if (relogio || pausado || !visivel || doc.hidden) return;
-      relogio = janela.setTimeout(proximo, INTERVALO);
+  /** Economia de dados ligada ou rede 2G: o vídeo não carrega sozinho (fica o pôster). */
+  function economiaDeDados() {
+    try {
+      const conexao = janela.navigator && janela.navigator.connection;
+      if (!conexao) return false;
+      return Boolean(conexao.saveData) || /(^|-)2g$/.test(String(conexao.effectiveType || ''));
+    } catch (_erro) {
+      return false;
     }
-    const parar = () => {
-      if (relogio) janela.clearTimeout(relogio);
-      relogio = 0;
+  }
+
+  /**
+   * O vídeo da loja na hero. O pôster já está no HTML (é o LCP); o vídeo, com preload="none", só baixa
+   * quando este código chama play(), depois do load da página. Com movimento reduzido ou economia de dados,
+   * fica parado no pôster e o botão oferece tocar. Pausa fora da tela e com a aba escondida.
+   */
+  function ligarVideoDoHero() {
+    const video = doc.querySelector('[data-nv-video]');
+    const hero = video ? video.closest('.hero') : null;
+    if (!video || !hero || typeof video.play !== 'function') return;
+    const pausa = hero.querySelector('[data-nv-pausa]');
+    const rotulo = hero.querySelector('[data-nv-pausa-rotulo]');
+    let parado = movimentoReduzido() || economiaDeDados();
+    let visivel = true;
+    let liberado = false;
+
+    const marcar = () => {
+      if (!pausa) return;
+      pausa.setAttribute('aria-pressed', String(parado));
+      if (rotulo) rotulo.textContent = parado ? 'Tocar o vídeo' : 'Pausar o vídeo';
+    };
+    const tocar = () => {
+      if (!liberado || parado || !visivel || doc.hidden || !video.paused) return;
+      const promessa = video.play();
+      // Navegador que recusa o autoplay (modo de economia do iPhone): fica o pôster.
+      if (promessa && typeof promessa.catch === 'function') promessa.catch(() => {});
+    };
+    const pausar = () => {
+      if (!video.paused) video.pause();
     };
 
+    video.addEventListener('playing', () => hero.classList.add('is-video'), { once: true });
     if (pausa) {
       pausa.hidden = false;
+      marcar();
       pausa.addEventListener('click', () => {
-        pausado = !pausado;
-        pausa.setAttribute('aria-pressed', String(pausado));
-        if (rotuloPausa) rotuloPausa.textContent = pausado ? 'Retomar a vitrine' : 'Pausar a vitrine';
-        if (pausado) parar();
-        else agendar();
+        parado = !parado;
+        liberado = true;
+        marcar();
+        if (parado) pausar();
+        else tocar();
       });
     }
     doc.addEventListener('visibilitychange', () => {
-      if (doc.hidden) parar();
-      else agendar();
+      if (doc.hidden) pausar();
+      else tocar();
     });
     if (typeof janela.IntersectionObserver === 'function') {
       new janela.IntersectionObserver((entradas) => {
         visivel = entradas[0].isIntersecting;
-        if (visivel) agendar();
-        else parar();
-      }).observe(vitrine);
+        if (visivel) tocar();
+        else pausar();
+      }).observe(hero);
     }
-    agendar();
+    // Girou o aparelho: as fontes do vídeo são por orientação; recarrega na certa e segue de onde estava.
+    try {
+      janela.matchMedia('(orientation: portrait)').addEventListener('change', () => {
+        if (video.networkState === 0) return;
+        const tempo = video.currentTime;
+        const tocava = !video.paused;
+        video.load();
+        video.addEventListener('loadedmetadata', () => {
+          try {
+            video.currentTime = tempo;
+          } catch (_erro) {
+            return;
+          }
+        }, { once: true });
+        if (tocava) tocar();
+      });
+    } catch (_erro) {
+      // Sem matchMedia com eventos: fica a fonte da orientação inicial.
+    }
+    const liberar = () => {
+      liberado = true;
+      tocar();
+    };
+    if (doc.readyState === 'complete') liberar();
+    else janela.addEventListener('load', liberar, { once: true });
   }
 
   function ligarFiltro() {
@@ -806,25 +831,57 @@
     });
   }
 
+  /**
+   * O chevron da marca (o mesmo desenho do .hero__chevron, caixa 22–94 × 10–110 de 120) em % da hero,
+   * com 6 pontos na ordem do retângulo cheio do CSS: canto de cima, ponta de cima, bico, ponta de baixo,
+   * canto de baixo, dente. Proporção mantida: 58% da altura, centrado um pouco à direita.
+   */
+  function chevronDaHero(hero) {
+    const largura = hero.clientWidth || 1;
+    const altura = hero.clientHeight || 1;
+    const alto = 58;
+    const largo = Math.min(70, (alto / 100) * altura * 0.72 / largura * 100);
+    const x0 = (telaGrande() ? 58 : 50) - largo / 2;
+    const y0 = (100 - alto) / 2;
+    const px = (v) => (x0 + ((v - 22) / 72) * largo).toFixed(2);
+    const py = (v) => (y0 + ((v - 10) / 100) * alto).toFixed(2);
+    return `polygon(${px(22)}% ${py(10)}%, ${px(50)}% ${py(10)}%, ${px(94)}% ${py(60)}%, ${px(50)}% ${py(110)}%, ${px(22)}% ${py(110)}%, ${px(66)}% ${py(60)}%)`;
+  }
+
   function ligarHero(gsap) {
+    const hero = doc.querySelector('.hero');
     const linhas = todos(doc, '.hero__linha > span');
     const neon = doc.querySelector('.hero__neon');
     const blocos = todos(doc, '[data-nv-hero]');
     const carga = doc.querySelector('[data-nv-carga]');
-    const palco = doc.querySelector('.hero__palco');
+    const midia = doc.querySelector('[data-nv-midia]');
+    const moldura = doc.querySelector('[data-nv-moldura]');
+    const camada = doc.querySelector('[data-nv-camada]');
+    const conteudo = doc.querySelector('.hero__conteudo');
+    const prova = doc.querySelector('.hero__prova');
     const chevron = doc.querySelector('.hero__chevron');
     const linha = gsap.timeline({ defaults: { ease: 'expo.out' } });
-    if (linhas.length) linha.fromTo(linhas, { yPercent: 110 }, { yPercent: 0, duration: 1.1, stagger: 0.12 }, 0.1);
-    if (neon) linha.fromTo(neon, { opacity: 0.35 }, { keyframes: { opacity: [0.35, 1, 0.55, 1] }, duration: 0.7, ease: 'none' }, 0.9);
-    if (carga) linha.fromTo(carga, { scaleX: 0 }, { scaleX: 1, duration: 1, ease: 'power3.inOut' }, 0.55);
-    if (blocos.length) linha.fromTo(blocos, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08 }, 0.6);
-    if (palco) linha.fromTo(palco, { opacity: 0, xPercent: 8 }, { opacity: 1, xPercent: 0, duration: 1.4 }, 0.3);
-    if (chevron) linha.fromTo(chevron, { opacity: 0, xPercent: 10, y: 0, yPercent: -50 }, { opacity: 1, xPercent: 0, y: 0, yPercent: -50, duration: 1.6 }, 0.2);
+    // Abertura: a loja aparece dentro do chevron da marca, que se abre até a tela inteira.
+    if (midia && hero) {
+      linha.fromTo(midia, { clipPath: chevronDaHero(hero), opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 0);
+      linha.to(midia, { clipPath: 'polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%)', duration: 1.6, ease: 'expo.inOut' }, 0.35);
+      if (camada) linha.fromTo(camada, { scale: 1.35 }, { scale: 1, duration: 2.4, ease: 'expo.out' }, 0.35);
+    }
+    if (linhas.length) linha.fromTo(linhas, { yPercent: 140 }, { yPercent: 0, duration: 1.1, stagger: 0.12 }, 1.05);
+    if (neon) linha.fromTo(neon, { opacity: 0.35 }, { keyframes: { opacity: [0.35, 1, 0.55, 1] }, duration: 0.7, ease: 'none' }, 1.85);
+    if (carga) linha.fromTo(carga, { scaleX: 0 }, { scaleX: 1, duration: 1, ease: 'power3.inOut' }, 1.5);
+    if (blocos.length) linha.fromTo(blocos, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08 }, 1.55);
+    if (chevron) linha.fromTo(chevron, { opacity: 0, xPercent: 10, y: 0, yPercent: -50 }, { opacity: 0.35, xPercent: 0, y: 0, yPercent: -50, duration: 1.6 }, 1.2);
 
-    if (!telaGrande() || !janela.ScrollTrigger) return;
-    const hero = doc.querySelector('.hero');
-    if (palco && hero) gsap.to(palco, { yPercent: -6, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
-    if (chevron && hero) gsap.to(chevron, { xPercent: -8, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
+    if (!janela.ScrollTrigger || !hero) return;
+    // Ao rolar: o vídeo se aproxima e recolhe num card de cantos redondos; o texto sobe e sai.
+    const rolar = { trigger: hero, start: 'top top', end: 'bottom top', scrub: true };
+    const grande = telaGrande();
+    if (moldura) gsap.fromTo(moldura, { clipPath: 'inset(0% 0% 0% 0% round 0rem)' }, { clipPath: grande ? 'inset(0% 4% 14% 4% round 2.5rem)' : 'inset(0% 3% 10% 3% round 1.5rem)', ease: 'none', scrollTrigger: rolar });
+    if (camada) gsap.to(camada, { yPercent: 10, ease: 'none', scrollTrigger: rolar });
+    if (conteudo) gsap.to(conteudo, { yPercent: grande ? -18 : -8, opacity: 0, ease: 'power1.in', scrollTrigger: rolar });
+    if (prova && grande) gsap.to(prova, { yPercent: -30, ease: 'none', scrollTrigger: rolar });
+    if (chevron && grande) gsap.to(chevron, { xPercent: -8, ease: 'none', scrollTrigger: rolar });
   }
 
   function ligarFaixa(gsap) {
@@ -858,7 +915,7 @@
     ligarModal();
     ligarFaq();
     ligarContadores();
-    ligarVitrineDoHero();
+    ligarVideoDoHero();
     const gsap = janela.gsap;
     if (!gsap || typeof gsap.timeline !== 'function' || movimentoReduzido()) return;
     try {
@@ -866,7 +923,7 @@
       ligarHero(gsap);
       ligarFaixa(gsap);
     } catch (_erro) {
-      gsap.set('[data-nv-hero], [data-nv-passos] > li, .hero__linha > span, .hero__neon, [data-nv-carga], .hero__palco, .hero__chevron', { clearProps: 'all' });
+      gsap.set('[data-nv-hero], [data-nv-passos] > li, .hero__linha > span, .hero__neon, [data-nv-carga], [data-nv-midia], [data-nv-moldura], [data-nv-camada], .hero__conteudo, .hero__prova, .hero__chevron', { clearProps: 'all' });
     }
   }
 

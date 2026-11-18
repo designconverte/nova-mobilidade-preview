@@ -621,6 +621,10 @@ h3 {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--es-espaco-6);
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-content: end;
+  min-height: max(38rem, 100vh);
+  min-height: max(38rem, 100svh);
   margin-top: calc(-1 * var(--nv-topo));
   padding: calc(var(--nv-topo) + clamp(2rem, 1rem + 4vw, 3.5rem)) 0 clamp(1.5rem, 1rem + 2vw, 2.5rem);
   overflow: clip;
@@ -637,22 +641,74 @@ h3 {
     var(--nv-preto);
 }
 
+.hero__moldura {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: inset(0% 0% 0% 0% round 0rem);
+}
+
+.hero__midia {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%);
+}
+
+.hero__camada {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 40%;
+}
+
+.hero__camada picture,
+.hero__poster,
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero__poster,
+.hero__video {
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+.hero__video {
+  opacity: 0;
+  transition: opacity 900ms var(--es-curva);
+}
+
+.hero.is-video .hero__video {
+  opacity: 1;
+}
+
+.hero__veu {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, var(--nv-veu-topo) 0%, var(--nv-vidro) 14%, var(--nv-vidro) 74%, var(--nv-tinta-92) 88%, var(--nv-preto) 100%),
+    radial-gradient(40rem 26rem at 0% 100%, var(--nv-verde-18), transparent 70%);
+}
+
 .hero__chevron {
   position: absolute;
-  top: 58%;
+  top: 40%;
   right: -38%;
   width: 130vw;
   height: auto;
   fill: none;
-  stroke: var(--nv-verde-18);
-  stroke-width: 0.5;
+  stroke: var(--nv-verde);
+  stroke-width: 0.35;
+  opacity: 0.35;
   transform: translateY(-50%);
 }
 
 .hero__conteudo {
   display: grid;
   gap: var(--es-espaco-6);
-  align-items: center;
+  align-items: end;
 }
 
 .hero__texto {
@@ -711,60 +767,9 @@ h3 {
   margin-top: var(--es-espaco-6);
 }
 
-.hero__vitrine {
-  position: relative;
-  display: grid;
-  gap: var(--es-espaco-3);
-}
-
-.hero__palco {
-  position: relative;
-  aspect-ratio: 16 / 11;
-}
-
-.hero__palco::before {
-  content: "";
-  position: absolute;
-  inset: 4% 4% 12%;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, var(--nv-verde-18), transparent);
-}
-
-.hero__palco::after {
-  content: "";
-  position: absolute;
-  left: 10%;
-  right: 10%;
-  bottom: 1%;
-  height: 10%;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, var(--nv-chao), transparent);
-}
-
-.hero__produto {
-  position: absolute;
-  inset: 0 0 4%;
-  z-index: 1;
-  width: 100%;
-  height: 96%;
-  object-fit: contain;
-  object-position: 50% 100%;
-  opacity: 0;
-  transform: translateX(6%) scale(0.97);
-  transition: opacity 700ms var(--es-curva), transform 1100ms var(--es-curva);
-}
-
-.hero__produto.is-ativo {
-  opacity: 1;
-  transform: none;
-}
-
-.hero__produto.is-saindo {
-  opacity: 0;
-  transform: translateX(-6%) scale(0.97);
-}
-
 .hero__legenda {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -801,7 +806,9 @@ h3 {
   padding: 0;
   border: 1.5px solid var(--nv-linha-vidro-forte);
   border-radius: 50%;
-  background: transparent;
+  background: var(--nv-branco-06);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   color: var(--es-cor-texto);
   cursor: pointer;
   transition: border-color var(--es-duracao) var(--es-curva), color var(--es-duracao) var(--es-curva);
@@ -2188,24 +2195,27 @@ h3 {
   }
 
   .hero {
-    grid-template-rows: minmax(0, 1fr) auto;
     min-height: max(44rem, 100vh);
     min-height: max(44rem, 100svh);
   }
 
   .hero__conteudo {
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    grid-template-columns: minmax(0, 46rem) auto;
+    justify-content: space-between;
     gap: var(--es-espaco-5);
+  }
+
+  .hero__veu {
+    background:
+      linear-gradient(90deg, var(--nv-tinta-92) 0%, var(--nv-vidro) 30%, var(--nv-vidro) 46%, var(--nv-veu-leve) 72%, transparent 100%),
+      linear-gradient(180deg, var(--nv-veu-topo) 0%, transparent 24%, transparent 62%, var(--nv-veu) 88%, var(--nv-preto) 100%),
+      radial-gradient(48rem 30rem at 0% 100%, var(--nv-verde-18), transparent 70%);
   }
 
   .hero__chevron {
     top: 50%;
     right: -6%;
     width: min(60rem, 62vw);
-  }
-
-  .hero__vitrine {
-    margin-right: calc(-1 * var(--es-espaco-6));
   }
 
   .faixa-verde__conteudo {
@@ -2282,7 +2292,7 @@ h3 {
   .menu__item,
   .menu__cortina,
   .menu__painel,
-  .hero__produto {
+  .hero__video {
     transition: none;
   }
 }
@@ -2385,7 +2395,16 @@ h3 {
 
 @media (min-width: 64em) {
   .hero__legenda {
-    padding-right: var(--es-espaco-6);
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--es-espaco-3);
+    padding-bottom: var(--es-espaco-2);
+  }
+
+  .hero__etiqueta {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--es-espaco-1);
   }
 
   .faixa-verde__conteudo {
